@@ -1786,45 +1786,73 @@
         drawNextLetter(textIntArray[0], 0, textIntArray);
     }
 
+    //Parses a string into the array used for drawing
     function parseText(text) {
+        //Creates a blank array
         var parsedText = [];
 
+        //Splits the text given every character into an array
         var splitText = text.split("");
 
+        //Creates a variable saying how many loops to skip
         var skip = 0;
 
+        //Creates a variable storing the actual index, as we do skipping so it is not sufficient to use the normal index
         var actualIndex = 0
 
+        //Loops through the split text, going through every letter
         splitText.forEach(function(item, index, arr) {
+            //Checks if the skip variable is set
             if (skip > 0) {
-                skip = skip - 1;
+                //Removes one from skip
+                skip -= 1;
+                //Ends this and continues to the next letter
                 return;
             }
 
+            //Sest the current letter to -1 to be filled later
             var letterIndex = -1
 
+            //Checks for the "th" combination
             if (item == "t" && arr[index + 1] == "h") {
+                //Sets the letter index to 16, aka Thalo
                 letterIndex = 16;
+                //Sets skip to one
                 skip = 1;
+            //Checks for the "sh" combination
             } else if (item == "s" && arr[index + 1] == "h") {
+                //Sets the letter index to 14, aka Shana
                 letterIndex = 14;
+                //Sets skip to one
                 skip = 1;
+            //Checks for the "ai" combination making sure to exclude "aia"
             } else if ((item == "a" && arr[index + 1] == "i") && !(item == "a" && arr[index + 1] == "i" && arr[index + 2] == "a")) {
+                //Sets the letter index to 20, aka Aya.DOTLESS
                 letterIndex = 20;
+                //Sets skip to one
                 skip = 1;
+            //Checks for the "aia" combination
             } else if ((item == "a" && arr[index + 1] == "i" && arr[index + 2] == "a")) {
+                //Sets the letter index to 1, aka Aya
                 letterIndex = 1;
+                //Sets skip to 2
                 skip = 2;
+            //Checks if the current letter is not null
             } else if (parseConversion[item] != null) {
+                //Sets the letter index to the currect int representation using the parseConversion table
                 letterIndex = parseConversion[item];
             }
 
+            //Sets the index we currently are on of the "parsedText" array to the letterIndex we got
             parsedText[actualIndex] = letterIndex;
+            //Adds one to the actual index
             actualIndex += 1;
         })
 
+        //Returns the parsed text
         return parsedText;
     }
 
+    //Runs the setup function to setup the screen
     setup();
 </script>
