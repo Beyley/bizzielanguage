@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="17.7409mm"
+   height="17.47513mm"
+   viewBox="0 0 17.7409 17.47513"
+   version="1.1"
+   id="svg196"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="Roqa.svg">
+  <title
+     id="title234">Ike</title>
+  <defs
+     id="defs190">
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect5125"
+       is_visible="true" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8"
+     inkscape:cx="38.330717"
+     inkscape:cy="-8.9453459"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="918"
+     inkscape:window-height="693"
+     inkscape:window-x="2237"
+     inkscape:window-y="167"
+     inkscape:window-maximized="0"
+     inkscape:snap-nodes="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata193">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Ike</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(7.7616435,-287.17024)">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.11666656px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 8.9209224,288.32034 v 15.2136 c 0,0 -6.74688,-0.3304 -6.74688,-8.06984 0,-6.58208 6.74688,-7.14376 6.74688,-7.14376 z"
+       id="path5224"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccsc" />
+    <circle
+       style="fill:none;stroke:#000000;stroke-width:1.39199996;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.99497483"
+       id="path5163-0"
+       cx="-4.870492"
+       cy="295.49719"
+       r="2.1951516" />
+  </g>
+</svg>

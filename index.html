@@ -1,0 +1,1729 @@
+<body>
+    <style>
+        .wrapper {
+            position: relative;
+        }
+        
+        .wrapper>canvas,
+        .wrapper>input {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        .wrapper>input {
+            right: 10px;
+            /* places the slider */
+            top: 10px;
+        }
+    </style>
+    <div class="wrapper">
+        <canvas class="myCanvas"><p>Your browser doesn't support canvas! Too bad!</p></canvas>
+    </div>
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/CanvasInput/1.2.7/CanvasInput.min.js"></script>
+
+<script>
+    const canvas = document.querySelector('.myCanvas');
+    const width = canvas.width = window.innerWidth;
+    const height = canvas.height = window.innerHeight * 8;
+
+    var input = new CanvasInput({
+        canvas: canvas,
+        x: 0,
+        width: width - 50,
+        onkeyup: function() {
+            text = input.value();
+
+            text = text.toLowerCase();
+
+            parsedText = parseText(text);
+
+            drawLine(parsedText, charScale);
+        }
+    });
+
+    const ctx = canvas.getContext('2d');
+
+    var text = "";
+    var parsedText = [];
+    var charScale = 1;
+    var drawOffset = [200, 50];
+
+    var parseConversion = []
+
+    parseConversion.a = 0;
+    parseConversion.ai = 20;
+    parseConversion.aia = 1;
+    parseConversion.e = 2;
+    parseConversion.h = 3;
+    parseConversion.i = 4;
+    parseConversion['\''] = 5;
+    parseConversion.k = 6;
+    parseConversion.l = 7;
+    parseConversion.m = 8;
+    parseConversion.n = 9;
+    parseConversion.o = 10;
+    parseConversion.q = 11;
+    parseConversion.r = 12;
+    parseConversion.s = 13;
+    parseConversion.sh = 14;
+    parseConversion.t = 15;
+    parseConversion.th = 16;
+    parseConversion.v = 17;
+    parseConversion.x = 18;
+    parseConversion.y = 19;
+    parseConversion[' '] = 21;
+    parseConversion['.'] = 22;
+    parseConversion['!'] = 23;
+    parseConversion['?'] = 24;
+
+    var letterPath = "letters/";
+    var punctuationPath = "punctuation/";
+    var beginningPath = "beginning/";
+    var endPath = "end/";
+    var yimePath = "yime/";
+
+    var renderConversion = [
+        letterPath + "Ame",
+        letterPath + "Aya",
+        letterPath + "Eke",
+        letterPath + "Hame",
+        letterPath + "Ika",
+        letterPath + "Ieae",
+        letterPath + "Kosa",
+        letterPath + "Lohe",
+        letterPath + "Moyi",
+        letterPath + "Nona",
+        letterPath + "Oqe",
+        letterPath + "Qoka",
+        letterPath + "Roqa",
+        letterPath + "Seva",
+        letterPath + "Shana",
+        letterPath + "Taye",
+        letterPath + "Thalo",
+        letterPath + "Vaka",
+        letterPath + "Xaho",
+        letterPath + "Yime",
+        letterPath + "Aya.DOTLESS",
+        punctuationPath + "space",
+        punctuationPath + "fullstop",
+        punctuationPath + "exclamation",
+        punctuationPath + "question",
+    ]
+
+    function setup() {
+        input.render();
+    }
+
+    function removeItem(items, i) {
+        return filteredItems = items.slice(0, i).concat(items.slice(i + 1, items.length));
+    }
+
+    function clearScreen() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        setup();
+    }
+
+    function drawLine(textIntArray, size) {
+        clearScreen();
+
+        var imageArray = [];
+        var yOffset = 0;
+        var xOffset = 0;
+        var lineAllignment = 0;
+
+        var useShortYime = 0;
+
+        function drawNextLetter(item, index, arr) {
+            imageArray[index] = new Image();
+
+            imageArray[index].textInt = item;
+
+            if (index == 0) {
+                imageArray[index].src = 'Characters/' + beginningPath + renderConversion[item] + '.svg';
+
+                if (item == 19) {
+                    switch (arr[index + 1]) {
+                        case 4:
+                            useShortYime = 1;
+                            break;
+                    }
+                }
+            } else if (index == (arr.length - 1)) {
+                imageArray[index].src = 'Characters/' + endPath + renderConversion[item] + '.svg';
+            } else {
+                imageArray[index].src = 'Characters/' + renderConversion[item] + '.svg';
+
+                if (item == 19) {
+                    switch (arr[index + 1]) {
+                        case 4:
+                            useShortYime = 1;
+                            break;
+                    }
+                }
+
+                if (arr[index - 1] == 21) {
+                    imageArray[index].src = 'Characters/' + beginningPath + renderConversion[item] + '.svg';
+                } else if (arr[index + 1] == 21) {
+                    imageArray[index].src = 'Characters/' + endPath + renderConversion[item] + '.svg';
+                }
+            }
+
+            if (useShortYime == 1) {
+                imageArray[index].src = 'Characters/' + yimePath + renderConversion[item] + '.svg';
+            }
+
+            imageArray[index].onload = function() {
+                lineAllignment = 0;
+                xOffset = 0;
+
+                var imgWidth = imageArray[index].width;
+                var imgHeight = imageArray[index].height;
+
+                //ctx.drawImage(imageArray[index], drawOffset[0], drawOffset[1], imgWidth * size, (imgWidth * size) * imageArray[index].height / imageArray[index].width);
+
+                switch (item) {
+                    case 0: //Ame 
+                        lineAllignment = 0; //new offset 24.81
+                        break;
+                    case 1: //Aya
+                        lineAllignment = 41.59;
+                        break;
+                    case 20: //Aya.DOTLESS
+                        lineAllignment = 41.59;
+                        break;
+                    case 2: //Eke
+                        lineAllignment = -18;
+                        break;
+                    case 3: //Hame
+                        lineAllignment = -1.1; //23.71
+                        break;
+                    case 4: //Ika
+                        lineAllignment = 7.69;
+                        break;
+                    case 5: //Ieae
+                        lineAllignment = -80.31;
+                        break;
+                    case 6: //Kosa
+                        lineAllignment = 41.6;
+                        break;
+                    case 7: //Lohe
+                        lineAllignment = 1;
+                        break;
+                    case 8: //Moyi
+                        lineAllignment = 11.69;
+                        break;
+                    case 9: //Nona
+                        lineAllignment = -11.31;
+                        break;
+                    case 10: //Oqe
+                        lineAllignment = 12.44;
+                        break;
+                    case 11: //Qoka
+                        lineAllignment = 3.21;
+                        break;
+                    case 12: //Roqa
+                        lineAllignment = -17.31;
+                        break;
+                    case 13: //Seva
+                        lineAllignment = 19.44;
+                        break;
+                    case 14: //Shana
+                        lineAllignment = -2;
+                        break;
+                    case 15: //Taye
+                        lineAllignment = -20.56;
+                        break;
+                    case 16: //Thalo
+                        lineAllignment = -16.71;
+                        break;
+                    case 17: //Vaka
+                        lineAllignment = -1.81;
+                        break;
+                    case 18: //Xaho
+                        lineAllignment = -1.5;
+                        break;
+                    case 19: //Yime
+                        lineAllignment = -16.5;
+                        break;
+                    case 22: //.
+                        lineAllignment = -121.75;
+                        break;
+                    case 23: //!
+                        lineAllignment = -121.75;
+                        break;
+                    case 24: //?
+                        lineAllignment = -121.75;
+                        break;
+
+                }
+
+                if (index > 0) {
+                    switch (item) {
+                        case 0: //Ame
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame
+                                    yOffset -= 15;
+                                    break;
+                                case 1: //Aya
+                                    yOffset -= 15;
+                                    break;
+                                case 20: //Aya.DOTLESS
+                                    yOffset -= 15;
+                                    break;
+                                case 2: //Eke
+                                    yOffset -= 15;
+                                    break;
+                                case 3: //Hame
+                                    yOffset -= 5;
+                                    break;
+                                case 4: //Ika
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae
+                                    yOffset -= 10;
+                                    break;
+                                case 6: //Kosa
+                                    yOffset -= 5;
+                                    break;
+                                case 7: //Lohe
+                                    yOffset -= 5;
+                                    break;
+                                case 8: //Moyi
+                                    yOffset -= 5;
+                                    break;
+                                case 9: //Nona
+                                    yOffset -= 5;
+                                    break;
+                                case 10: //Oqe
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka
+                                    yOffset -= 5;
+                                    break;
+                                case 12: //Roqa
+                                    yOffset -= 18.15;
+                                    break;
+                                case 13: //Seva
+                                    yOffset -= 10;
+                                    break;
+                                case 14: //Shana
+                                    yOffset -= 18;
+                                    break;
+                                case 15: //Taye
+                                    yOffset -= 10;
+                                    break;
+                                case 16: //Thalo
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka
+                                    yOffset -= 15;
+                                    break;
+                                case 18: //Xaho
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime
+                                    yOffset -= 10;
+                                    break;
+                            }
+                            break;
+                        case 1: //Aya
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame 
+                                    yOffset -= 20;
+                                    break;
+                                case 1: //Aya 
+                                    yOffset -= 15;
+                                    break;
+                                case 20: //Aya.DOTLESS 
+                                    yOffset -= 15;
+                                    break;
+                                case 2: //Eke 
+                                    yOffset -= 30;
+                                    break;
+                                case 3: //Hame 
+                                    yOffset -= 0;
+                                    break;
+                                case 4: //Ika 
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae 
+                                    yOffset -= 10;
+                                    break;
+                                case 6: //Kosa 
+                                    yOffset -= 5;
+                                    break;
+                                case 7: //Lohe 
+                                    yOffset -= 5;
+                                    break;
+                                case 8: //Moyi 
+                                    yOffset -= 25;
+                                    break;
+                                case 9: //Nona 
+                                    yOffset -= 25;
+                                    break;
+                                case 10: //Oqe 
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka 
+                                    yOffset -= 0;
+                                    break;
+                                case 12: //Roqa 
+                                    yOffset -= 30;
+                                    break;
+                                case 13: //Seva 
+                                    yOffset -= 10;
+                                    break;
+                                case 14: //Shana 
+                                    yOffset -= 10;
+                                    break;
+                                case 15: //Taye 
+                                    yOffset -= 5;
+                                    break;
+                                case 16: //Thalo 
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka 
+                                    yOffset -= 15;
+                                    break;
+                                case 18: //Xaho 
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime
+                                    yOffset -= 30;
+                                    break;
+                            }
+                            break;
+                        case 20: //Aya.DOTLESS
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame 
+                                    yOffset -= 20;
+                                    break;
+                                case 1: //Aya 
+                                    yOffset -= 15;
+                                    break;
+                                case 20: //Aya.DOTLESS 
+                                    yOffset -= 15;
+                                    break;
+                                case 2: //Eke 
+                                    yOffset -= 30;
+                                    break;
+                                case 3: //Hame 
+                                    yOffset -= 0;
+                                    break;
+                                case 4: //Ika 
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae 
+                                    yOffset -= 10;
+                                    break;
+                                case 6: //Kosa 
+                                    yOffset -= 5;
+                                    break;
+                                case 7: //Lohe 
+                                    yOffset -= 5;
+                                    break;
+                                case 8: //Moyi 
+                                    yOffset -= 25;
+                                    break;
+                                case 9: //Nona 
+                                    yOffset -= 25;
+                                    break;
+                                case 10: //Oqe 
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka 
+                                    yOffset -= 0;
+                                    break;
+                                case 12: //Roqa 
+                                    yOffset -= 30;
+                                    break;
+                                case 13: //Seva 
+                                    yOffset -= 10;
+                                    break;
+                                case 14: //Shana 
+                                    yOffset -= 10;
+                                    break;
+                                case 15: //Taye 
+                                    yOffset -= 5;
+                                    break;
+                                case 16: //Thalo 
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka 
+                                    yOffset -= 15;
+                                    break;
+                                case 18: //Xaho 
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime
+                                    yOffset -= 30;
+                                    break;
+                            }
+                            break;
+                        case 2: //Eke
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 6;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime DONE
+                                    yOffset -= 0;
+                                    break;
+                            }
+                            break;
+                        case 3: //Hame
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime DONE
+                                    yOffset -= 0;
+                                    break;
+                            }
+                            break;
+                        case 4: //Ika
+                            switch (imageArray[index - 1].textInt) {
+                                case 1: //Aya DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 14;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7;
+                                    xOffset = 2;
+                                    break;
+                                case 19: //Yime DONE
+                                    yOffset -= 5;
+                                    break;
+                            }
+                            break;
+                        case 5: //Ieae
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE 
+                                    yOffset -= 15;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 7: //Lohe 
+                                    yOffset -= 6;
+                                    break;
+                                case 8: //Moyi NONE
+                                    yOffset -= 0;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 9;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 9;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime DONE
+                                    yOffset -= 0;
+                                    break;
+                            }
+                            break;
+                        case 6: //Kosa
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE 
+                                    yOffset -= 15;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime 
+                                    yOffset -= 30;
+                                    break;
+                            }
+                            break;
+                        case 7: //Lohe
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 7;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 11;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime DONE
+                                    yOffset -= 0;
+                                    break;
+                            }
+                            break;
+                        case 8: //Moyi
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE 
+                                    yOffset -= 15;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime DONE
+                                    yOffset -= 0;
+                                    break;
+                            }
+                            break;
+                        case 9: //Nona
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime DONE
+                                    yOffset -= 0;
+                                    break;
+                            }
+                            break;
+                        case 10: //Oqe
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime DONE
+                                    yOffset -= 20;
+                                    break;
+                            }
+                            break;
+                        case 11: //Qoka
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime DONE
+                                    yOffset -= 0;
+                                    break;
+                            }
+                            break;
+                        case 12: //Roqa
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 3;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 3;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 3;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 3;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 3;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 3;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime DONE
+                                    yOffset -= 3;
+                                    break;
+                            }
+                            break;
+                        case 13: //Seva
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE 
+                                    yOffset -= 0;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 2;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime DONE
+                                    yOffset -= 0;
+                                    break;
+                            }
+                            break;
+                        case 14: //Shana
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 9;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime DONE
+                                    yOffset -= 0;
+                                    break;
+                            }
+                            break;
+                        case 15: //Taye
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime DONE
+                                    yOffset -= 0;
+                                    break;
+                            }
+                            break;
+                        case 16: //Thalo
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 1;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 1;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 1;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime DONE
+                                    yOffset -= 0;
+                                    break;
+                            }
+                            break;
+                        case 17: //Vaka
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 6;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 8.5;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 8.5;
+                                    break;
+                                case 19: //Yime DONE
+                                    yOffset -= 15;
+                                    break;
+                            }
+                            break;
+                        case 18: //Xaho
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime DONE
+                                    yOffset -= 0;
+                                    break;
+                            }
+                            break;
+                        case 19: //Yime
+                            switch (imageArray[index - 1].textInt) {
+                                case 0: //Ame DONE
+                                    yOffset -= 30;
+                                    break;
+                                case 1: //Aya DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 20: //Aya.DOTLESS DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 2: //Eke DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 3: //Hame DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 4: //Ika DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 5: //Ieae DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 6: //Kosa DONE
+                                    yOffset -= 20;
+                                    break;
+                                case 7: //Lohe DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 8: //Moyi DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 9: //Nona DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 10: //Oqe DONE
+                                    yOffset -= 17.5;
+                                    break;
+                                case 11: //Qoka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 12: //Roqa DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 13: //Seva DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 14: //Shana DONE
+                                    yOffset -= 10;
+                                    break;
+                                case 15: //Taye DONE
+                                    yOffset -= 5;
+                                    break;
+                                case 16: //Thalo DONE
+                                    yOffset -= 15;
+                                    break;
+                                case 17: //Vaka DONE
+                                    yOffset -= 0;
+                                    break;
+                                case 18: //Xaho DONE
+                                    yOffset -= 7.5;
+                                    break;
+                                case 19: //Yime 
+                                    yOffset -= 30;
+                                    break;
+                            }
+                            break;
+                    }
+                }
+
+                if (useShortYime == 1) {
+                    useShortYime = 2;
+                } else if (useShortYime == 2) {
+                    yOffset -= 22;
+                    useShortYime = 0;
+                }
+
+                if (item != 21)
+                    ctx.drawImage(imageArray[index], 0, 0, imgWidth, imgHeight, drawOffset[0] + xOffset + lineAllignment, drawOffset[1] + yOffset, imgWidth * size, imgHeight * size);
+
+                yOffset += imgHeight;
+
+                if (index < arr.length)
+                    drawNextLetter(arr[index + 1], index + 1, arr);
+            }
+        }
+
+        drawNextLetter(textIntArray[0], 0, textIntArray);
+    }
+
+    function parseText(text) {
+        var parsedText = [];
+
+        var splitText = text.split("");
+
+        var skip = 0;
+
+        var actualIndex = 0
+
+        splitText.forEach(function(item, index, arr) {
+            if (skip > 0) {
+                skip = skip - 1;
+                return;
+            }
+
+            var letterIndex = -1
+
+            if (item == "t" && arr[index + 1] == "h") {
+                letterIndex = 16;
+                skip = 1;
+            } else if (item == "s" && arr[index + 1] == "h") {
+                letterIndex = 14;
+                skip = 1;
+            } else if ((item == "a" && arr[index + 1] == "i") && !(item == "a" && arr[index + 1] == "i" && arr[index + 2] == "a")) {
+                letterIndex = 20;
+                skip = 1;
+            } else if ((item == "a" && arr[index + 1] == "i" && arr[index + 2] == "a")) {
+                letterIndex = 1;
+                skip = 2;
+            } else if (parseConversion[item] != null) {
+                letterIndex = parseConversion[item];
+            }
+
+            parsedText[actualIndex] = letterIndex;
+            actualIndex += 1;
+        })
+
+        return parsedText;
+    }
+
+    setup();
+</script>
