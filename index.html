@@ -25,169 +25,227 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/CanvasInput/1.2.7/CanvasInput.min.js"></script>
 
 <script>
+    //Get the canvas
     const canvas = document.querySelector('.myCanvas');
+    //Get the width and height of the window
     const width = canvas.width = window.innerWidth;
     const height = canvas.height = window.innerHeight * 8;
 
+    //Create a new input box
     var input = new CanvasInput({
-        canvas: canvas,
-        x: 0,
-        width: width - 50,
-        onkeyup: function() {
+        canvas: canvas, //The canvas to draw it on
+        x: 0, //The X position of the canvas
+        width: width - 50, //The width of the canvas, in this case the width of the window - 50px
+        onkeyup: function() { //The function to run when a key is unpressed
+            //Get thet text currently in the input box and put it into the "text" variable
             text = input.value();
 
+            //Force the text to be lower case for parsing
             text = text.toLowerCase();
 
+            //Parses the text into an array and puts it into the "parsedText" variable
             parsedText = parseText(text);
 
+            //Draws the text on the screen
             drawLine(parsedText, charScale);
         }
     });
 
+    //Gets the canvas context
     const ctx = canvas.getContext('2d');
 
+    //The variable the text is stored in
     var text = "";
+    //The variable the parsed text is stored in
     var parsedText = [];
+    //The scale of the text to draw, for future use, currently is useless
     var charScale = 1;
+    //The offset to draw the text at
     var drawOffset = [200, 50];
 
-    var parseConversion = []
+    //The variable that stores the conversion of the text itself into numbers
+    var parseConversion = [];
 
-    parseConversion.a = 0;
-    parseConversion.ai = 20;
-    parseConversion.aia = 1;
-    parseConversion.e = 2;
-    parseConversion.h = 3;
-    parseConversion.i = 4;
-    parseConversion['\''] = 5;
-    parseConversion.k = 6;
-    parseConversion.l = 7;
-    parseConversion.m = 8;
-    parseConversion.n = 9;
-    parseConversion.o = 10;
-    parseConversion.q = 11;
-    parseConversion.r = 12;
-    parseConversion.s = 13;
-    parseConversion.sh = 14;
-    parseConversion.t = 15;
-    parseConversion.th = 16;
-    parseConversion.v = 17;
-    parseConversion.x = 18;
-    parseConversion.y = 19;
-    parseConversion[' '] = 21;
-    parseConversion['.'] = 22;
-    parseConversion['!'] = 23;
-    parseConversion['?'] = 24;
+    parseConversion.a = 0;     //Ame
+    parseConversion.ai = 20;   //Aya.DOTLESS
+    parseConversion.aia = 1;   //Aya
+    parseConversion.e = 2;     //Eke
+    parseConversion.h = 3;     //Hame
+    parseConversion.i = 4;     //Ika
+    parseConversion['\''] = 5; //Ieae
+    parseConversion.k = 6;     //Kosa
+    parseConversion.l = 7;     //Lohe
+    parseConversion.m = 8;     //Moyi
+    parseConversion.n = 9;     //Nona
+    parseConversion.o = 10;    //Oqe
+    parseConversion.q = 11;    //Qoka
+    parseConversion.r = 12;    //Roqa
+    parseConversion.s = 13;    //Seva
+    parseConversion.sh = 14;   //Shana
+    parseConversion.t = 15;    //Taye
+    parseConversion.th = 16;   //Thalo
+    parseConversion.v = 17;    //Vaka
+    parseConversion.x = 18;    //Xaho
+    parseConversion.y = 19;    //Yime
+    parseConversion[' '] = 21; //space
+    parseConversion['.'] = 22; //fullstop
+    parseConversion['!'] = 23; //exclamation
+    parseConversion['?'] = 24; //question
 
+    //The path that the normal letters use
     var letterPath = "letters/";
+    //The path the punctuation uses
     var punctuationPath = "punctuation/";
+    //The path for the characters that appear at the beginning of words
     var beginningPath = "beginning/";
+    //The path for the characters that appear at the end of words
     var endPath = "end/";
+    //The path for a shorter version of yime that some characters need
     var yimePath = "yime/";
 
+    //The array that assigns the parsed numbers to a path
     var renderConversion = [
-        letterPath + "Ame",
-        letterPath + "Aya",
-        letterPath + "Eke",
-        letterPath + "Hame",
-        letterPath + "Ika",
-        letterPath + "Ieae",
-        letterPath + "Kosa",
-        letterPath + "Lohe",
-        letterPath + "Moyi",
-        letterPath + "Nona",
-        letterPath + "Oqe",
-        letterPath + "Qoka",
-        letterPath + "Roqa",
-        letterPath + "Seva",
-        letterPath + "Shana",
-        letterPath + "Taye",
-        letterPath + "Thalo",
-        letterPath + "Vaka",
-        letterPath + "Xaho",
-        letterPath + "Yime",
-        letterPath + "Aya.DOTLESS",
-        punctuationPath + "space",
-        punctuationPath + "fullstop",
-        punctuationPath + "exclamation",
-        punctuationPath + "question",
+        letterPath + "Ame",   //0
+        letterPath + "Aya",   //1
+        letterPath + "Eke",   //2
+        letterPath + "Hame",  //3
+        letterPath + "Ika",   //4
+        letterPath + "Ieae",  //5
+        letterPath + "Kosa",  //6
+        letterPath + "Lohe",  //7 
+        letterPath + "Moyi",  //8
+        letterPath + "Nona",  //9
+        letterPath + "Oqe",   //10
+        letterPath + "Qoka",  //11
+        letterPath + "Roqa",  //12
+        letterPath + "Seva",  //13
+        letterPath + "Shana", //14
+        letterPath + "Taye",  //15
+        letterPath + "Thalo", //16
+        letterPath + "Vaka",  //17
+        letterPath + "Xaho",  //18
+        letterPath + "Yime",  //19
+        letterPath + "Aya.DOTLESS", //20
+        punctuationPath + "space",       //21
+        punctuationPath + "fullstop",    //22
+        punctuationPath + "exclamation", //23
+        punctuationPath + "question",    //24
     ]
 
+    //The setup function, sets up the interface
     function setup() {
+        //Render the input box
         input.render();
     }
 
+    //Removes an item from an array at a specified index
     function removeItem(items, i) {
         return filteredItems = items.slice(0, i).concat(items.slice(i + 1, items.length));
     }
 
+    //Clears the screen
     function clearScreen() {
+        //Clears the screen
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        //Runs the setup function
         setup();
     }
 
+    //Draws the line onto the screen
     function drawLine(textIntArray, size) {
+        //Clears the screen
         clearScreen();
 
+        //Sets up an array to store the images in
         var imageArray = [];
+        //The variable to store the current y offset from the top of the screen, used to make the text go down a specified amount
         var yOffset = 0;
+        //The variable to store the current x offset, reset every loop
         var xOffset = 0;
+        //The per-character allignment to the line
         var lineAllignment = 0;
 
+        //Whether or not to use the short version of Yime
         var useShortYime = 0;
 
+        //Draws the next character, is based off an array.forEach, but that produced problems with it loading and displaying out of order, 
+        //so this is manually called after a characer is drawn
         function drawNextLetter(item, index, arr) {
+            //Creates a new image in the image array
             imageArray[index] = new Image();
 
+            //Stores the int representation of the letter inside of the image object
             imageArray[index].textInt = item;
 
+            //Checks if it is the first character in the loop
             if (index == 0) {
+                //Sets the source of the image file to the folder that stores the beginning variants of the letters
                 imageArray[index].src = 'Characters/' + beginningPath + renderConversion[item] + '.svg';
 
+                //Checks if the current character is Yime
                 if (item == 19) {
+                    //Switch case for the next letter in the list
                     switch (arr[index + 1]) {
-                        case 4:
+                        case 4: //Ika
+                            //Makes Yime use the short version, to be ready for the next letter
                             useShortYime = 1;
                             break;
                     }
                 }
+            //Checks if it is the last element in the array
             } else if (index == (arr.length - 1)) {
+                //Sets the image source to the path of the set of characters for the end of the line
                 imageArray[index].src = 'Characters/' + endPath + renderConversion[item] + '.svg';
             } else {
+                //Sets the image source to the normal set of characters
                 imageArray[index].src = 'Characters/' + renderConversion[item] + '.svg';
 
+                //Checks if the current character is Yime
                 if (item == 19) {
+                    //Switch case for the next letter in the list
                     switch (arr[index + 1]) {
-                        case 4:
+                        case 4: //Ika
+                            //Makes Yime use the short version, to be ready for the next letter
                             useShortYime = 1;
                             break;
                     }
                 }
 
+                //Checks if the previous character is a space
                 if (arr[index - 1] == 21) {
+                    //Sets the image source to the set of characters that appear at the beginning of a line
                     imageArray[index].src = 'Characters/' + beginningPath + renderConversion[item] + '.svg';
+                //Checks if the next character is a space
                 } else if (arr[index + 1] == 21) {
+                    //Sets the image source to the set of characters that appear at the end of a line
                     imageArray[index].src = 'Characters/' + endPath + renderConversion[item] + '.svg';
                 }
             }
 
+            //Checks if useShortYime is set
             if (useShortYime == 1) {
+                //Set the image source to the short yime path
                 imageArray[index].src = 'Characters/' + yimePath + renderConversion[item] + '.svg';
             }
 
+            //Sets the function to run when the image loads
             imageArray[index].onload = function() {
+                //Reset both lineAllignment and xOffset
                 lineAllignment = 0;
                 xOffset = 0;
 
+                //Get the image width and height and store them in variables
                 var imgWidth = imageArray[index].width;
                 var imgHeight = imageArray[index].height;
 
+                //Debug code
                 //ctx.drawImage(imageArray[index], drawOffset[0], drawOffset[1], imgWidth * size, (imgWidth * size) * imageArray[index].height / imageArray[index].width);
 
+                //Case to get the current character and set the line allignment so it is properly on the line
                 switch (item) {
                     case 0: //Ame 
-                        lineAllignment = 0; //new offset 24.81
+                        lineAllignment = 0; 
                         break;
                     case 1: //Aya
                         lineAllignment = 41.59;
@@ -199,7 +257,7 @@
                         lineAllignment = -18;
                         break;
                     case 3: //Hame
-                        lineAllignment = -1.1; //23.71
+                        lineAllignment = -1.1;
                         break;
                     case 4: //Ika
                         lineAllignment = 7.69;
@@ -260,10 +318,17 @@
                         break;
 
                 }
-
+                
+                /*  SPAGHETTI CODE INCOMING  */
+                /*       EXPECT SUB-PAR      */
+                /*       DOCUMENTATION       */
+                
+                //Checks if it is not the first character
                 if (index > 0) {
+                    //Switch case for determining the current letter
                     switch (item) {
                         case 0: //Ame
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame
                                     yOffset -= 15;
@@ -331,6 +396,7 @@
                             }
                             break;
                         case 1: //Aya
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame 
                                     yOffset -= 20;
@@ -398,6 +464,7 @@
                             }
                             break;
                         case 20: //Aya.DOTLESS
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame 
                                     yOffset -= 20;
@@ -465,6 +532,7 @@
                             }
                             break;
                         case 2: //Eke
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 30;
@@ -532,6 +600,7 @@
                             }
                             break;
                         case 3: //Hame
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 30;
@@ -593,6 +662,7 @@
                             }
                             break;
                         case 4: //Ika
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 1: //Aya DONE
                                     yOffset -= 5;
@@ -658,6 +728,7 @@
                             }
                             break;
                         case 5: //Ieae
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 30;
@@ -725,6 +796,7 @@
                             }
                             break;
                         case 6: //Kosa
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 30;
@@ -792,6 +864,7 @@
                             }
                             break;
                         case 7: //Lohe
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 30;
@@ -859,6 +932,7 @@
                             }
                             break;
                         case 8: //Moyi
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 30;
@@ -926,6 +1000,7 @@
                             }
                             break;
                         case 9: //Nona
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 30;
@@ -993,6 +1068,7 @@
                             }
                             break;
                         case 10: //Oqe
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 30;
@@ -1060,6 +1136,7 @@
                             }
                             break;
                         case 11: //Qoka
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 0;
@@ -1127,6 +1204,7 @@
                             }
                             break;
                         case 12: //Roqa
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 30;
@@ -1194,6 +1272,7 @@
                             }
                             break;
                         case 13: //Seva
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 0;
@@ -1261,6 +1340,7 @@
                             }
                             break;
                         case 14: //Shana
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 30;
@@ -1328,6 +1408,7 @@
                             }
                             break;
                         case 15: //Taye
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 30;
@@ -1395,6 +1476,7 @@
                             }
                             break;
                         case 16: //Thalo
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 30;
@@ -1462,6 +1544,7 @@
                             }
                             break;
                         case 17: //Vaka
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 30;
@@ -1529,6 +1612,7 @@
                             }
                             break;
                         case 18: //Xaho
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 30;
@@ -1596,6 +1680,7 @@
                             }
                             break;
                         case 19: //Yime
+                            //Switch case for determining the last letter to set the correct y offset
                             switch (imageArray[index - 1].textInt) {
                                 case 0: //Ame DONE
                                     yOffset -= 30;
@@ -1664,24 +1749,40 @@
                             break;
                     }
                 }
-
+                
+                /*                            */
+                /*      END OF SPAGHETTI      */
+                /*  ENJOY GOOD DOCUMENTATION  */
+                /*                            */
+                
+                //Checks if "useShortYime" is set to 1
                 if (useShortYime == 1) {
+                    //Sets "useShortYime" to 2 for the next loop (aka the next character)
                     useShortYime = 2;
+                //Checks if "useShortYime" is set to 2
                 } else if (useShortYime == 2) {
+                    //Sets the y offset to be aligned with the shorter Yime
                     yOffset -= 22;
+                    //Resets "useShortYime"
                     useShortYime = 0;
                 }
 
+                //Checks if the current letter is not space
                 if (item != 21)
+                    //Draw the image
                     ctx.drawImage(imageArray[index], 0, 0, imgWidth, imgHeight, drawOffset[0] + xOffset + lineAllignment, drawOffset[1] + yOffset, imgWidth * size, imgHeight * size);
 
+                //Add the height of the current letter to the y offset
                 yOffset += imgHeight;
 
+                //Checks if it is not the last item in the array
                 if (index < arr.length)
+                    //Continue the loop only after the image is fully drawn
                     drawNextLetter(arr[index + 1], index + 1, arr);
             }
         }
 
+        //Draws the first letter in the array, beginning the loop
         drawNextLetter(textIntArray[0], 0, textIntArray);
     }
 
