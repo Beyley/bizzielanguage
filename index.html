@@ -25,66 +25,85 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/CanvasInput/1.2.7/CanvasInput.min.js"></script>
 
 <script>
+    //Get the canvas
     const canvas = document.querySelector('.myCanvas');
+    //Get the width and height of the window
     const width = canvas.width = window.innerWidth;
     const height = canvas.height = window.innerHeight * 8;
 
+    //Create a new input box
     var input = new CanvasInput({
-        canvas: canvas,
-        x: 0,
-        width: width - 50,
-        onkeyup: function() {
+        canvas: canvas, //The canvas to draw it on
+        x: 0, //The X position of the canvas
+        width: width - 50, //The width of the canvas, in this case the width of the window - 50px
+        onkeyup: function() { //The function to run when a key is unpressed
+            //Get thet text currently in the input box and put it into the "text" variable
             text = input.value();
 
+            //Force the text to be lower case for parsing
             text = text.toLowerCase();
 
+            //Parses the text into an array and puts it into the "parsedText" variable
             parsedText = parseText(text);
 
+            //Draws the text on the screen
             drawLine(parsedText, charScale);
         }
     });
 
+    //Gets the canvas context
     const ctx = canvas.getContext('2d');
 
+    //The variable the text is stored in
     var text = "";
+    //The variable the parsed text is stored in
     var parsedText = [];
+    //The scale of the text to draw, for future use, currently is useless
     var charScale = 1;
+    //The offset to draw the text at
     var drawOffset = [200, 50];
 
-    var parseConversion = []
+    //The variable that stores the conversion of the text itself into numbers
+    var parseConversion = [];
 
-    parseConversion.a = 0;
-    parseConversion.ai = 20;
-    parseConversion.aia = 1;
-    parseConversion.e = 2;
-    parseConversion.h = 3;
-    parseConversion.i = 4;
-    parseConversion['\''] = 5;
-    parseConversion.k = 6;
-    parseConversion.l = 7;
-    parseConversion.m = 8;
-    parseConversion.n = 9;
-    parseConversion.o = 10;
-    parseConversion.q = 11;
-    parseConversion.r = 12;
-    parseConversion.s = 13;
-    parseConversion.sh = 14;
-    parseConversion.t = 15;
-    parseConversion.th = 16;
-    parseConversion.v = 17;
-    parseConversion.x = 18;
-    parseConversion.y = 19;
-    parseConversion[' '] = 21;
-    parseConversion['.'] = 22;
-    parseConversion['!'] = 23;
-    parseConversion['?'] = 24;
+    parseConversion.a = 0;     //Ame
+    parseConversion.ai = 20;   //Aya.DOTLESS
+    parseConversion.aia = 1;   //Aya
+    parseConversion.e = 2;     //Eke
+    parseConversion.h = 3;     //Hame
+    parseConversion.i = 4;     //Ika
+    parseConversion['\''] = 5; //Ieae
+    parseConversion.k = 6;     //Kosa
+    parseConversion.l = 7;     //Lohe
+    parseConversion.m = 8;     //Moyi
+    parseConversion.n = 9;     //Nona
+    parseConversion.o = 10;    //Oqe
+    parseConversion.q = 11;    //Qoka
+    parseConversion.r = 12;    //Roqa
+    parseConversion.s = 13;    //Seva
+    parseConversion.sh = 14;   //Shana
+    parseConversion.t = 15;    //Taye
+    parseConversion.th = 16;   //Thalo
+    parseConversion.v = 17;    //Vaka
+    parseConversion.x = 18;    //Xaho
+    parseConversion.y = 19;    //Yime
+    parseConversion[' '] = 21; //space
+    parseConversion['.'] = 22; //fullstop
+    parseConversion['!'] = 23; //exclamation
+    parseConversion['?'] = 24; //question
 
+    //The path that the normal letters use
     var letterPath = "letters/";
+    //The path the punctuation uses
     var punctuationPath = "punctuation/";
+    //The path for the characters that appear at the beginning of words
     var beginningPath = "beginning/";
+    //The path for the characters that appear at the end of words
     var endPath = "end/";
+    //The path for a shorter version of yime that some characters need
     var yimePath = "yime/";
 
+    //The array that assigns the parsed numbers to a path
     var renderConversion = [
         letterPath + "Ame",
         letterPath + "Aya",
@@ -113,7 +132,9 @@
         punctuationPath + "question",
     ]
 
+    //The setup function
     function setup() {
+        //Render the input box
         input.render();
     }
 
