@@ -1812,6 +1812,8 @@
             //Add the height of the current letter to the y offset
             yOffset += imgHeight;
 
+            canvas.height = window.innerHeight + yOffset;
+
             //Checks if it is not the last item in the array
             if (index < arr.length - 1)
             //Continue the loop only after the image is drawn
