@@ -1830,7 +1830,7 @@
             if (index < arr.length - 1) {
                 //Continue the loop only after the image is drawn
                 drawNextLetter(arr[index + 1], index + 1, arr);
-            } else if (index == arr.length) {
+            } else if (index == arr.length - 1) {
                 resizeCanvas(window.innerHeight + yOffset);
             }
         }
