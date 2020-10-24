@@ -149,7 +149,7 @@
 		renderConversion.forEach(function(item, index, arr) {
 			loadedImages.normal.letters[index] = new Image();
 			
-			loadedImages.normal.letters[index].src = item;
+			loadedImages.normal.letters[index].src = item + ".svg";
 			
 			loadedImages.normal.letters[index].onload = function() {
 				
@@ -157,7 +157,7 @@
 			
 			loadedImages.beginning.letters[index] = new Image();
 			
-			loadedImages.beginning.letters[index].src = beginningPath + item;
+			loadedImages.beginning.letters[index].src = beginningPath + item + ".svg";
 			
 			loadedImages.beginning.letters[index].onload = function() {
 				
@@ -165,7 +165,7 @@
 			
 			loadedImages.end.letters[index] = new Image();
 			
-			loadedImages.end.letters[index].src = endPath + item;
+			loadedImages.end.letters[index].src = endPath + item + ".svg";
 			
 			loadedImages.end.letters[index].onload = function() {
 				
