@@ -54,6 +54,18 @@
     //Gets the canvas context
     const ctx = canvas.getContext('2d');
 
+    // Make our in-memory canvas
+    var inMemCanvas = document.createElement('canvas');
+    var inMemCtx = inMemCanvas.getContext('2d')
+
+    function resizeCanvas(height) {
+        inMemCanvas.width = canvas.width;
+        inMemCanvas.height = canvas.height;
+        inMemCtx.drawImage(canvas, 0, 0);
+        canvas.height = 1000;
+        ctx.drawImage(inMemCanvas, 0, 0);
+    }
+
     //The variable the text is stored in
     var text = "";
     //The variable the parsed text is stored in
@@ -1812,7 +1824,7 @@
             //Add the height of the current letter to the y offset
             yOffset += imgHeight;
 
-            canvas.height = window.innerHeight + yOffset;
+            resizeCanvas(window.innerHeight + yOffset);
 
             //Checks if it is not the last item in the array
             if (index < arr.length - 1)
