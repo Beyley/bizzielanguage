@@ -224,9 +224,6 @@
             //Creates a new image in the image array
             imageArray[index] = new Image();
 
-            //Stores the int representation of the letter inside of the image object
-            imageArray[index].textInt = item;
-
             //Checks if it is the first character in the loop
             if (index == 0) {
                 //Sets the source of the image file to the folder that stores the beginning variants of the letters
@@ -290,8 +287,9 @@
 				imageArray[index] = loadedImages.yime.letters[item];
             }
 
-            //Sets the function to run when the image loads
-            //imageArray[index].onload = function() {
+			//Stores the int representation of the letter inside of the image object
+            imageArray[index].textInt = item;
+		
                 //Reset both lineAllignment and xOffset
                 lineAllignment = 0;
                 xOffset = 0;
