@@ -172,11 +172,11 @@
 			}
 		});
 		
-		loadedImages.end.letters[index] = new Image();
+		loadedImages.yime.letters[index] = new Image();
 		
-		loadedImages.end.letters[index].src = yimePath + "letters/Yime.svg";
+		loadedImages.yime.letters[index].src = yimePath + "letters/Yime.svg";
 		
-		loadedImages.end.letters[index].onload = function() {
+		loadedImages.yime.letters[index].onload = function() {
 			
 		}
 	}
@@ -230,7 +230,9 @@
             //Checks if it is the first character in the loop
             if (index == 0) {
                 //Sets the source of the image file to the folder that stores the beginning variants of the letters
-                imageArray[index].src = 'Characters/' + beginningPath + renderConversion[item] + '.svg';
+                //imageArray[index].src = 'Characters/' + beginningPath + renderConversion[item] + '.svg';
+		    
+				imageArray[index] = loadedImages.beginning.letters[item];
 
                 //Checks if the current character is Yime
                 if (item == 19) {
@@ -245,10 +247,14 @@
             //Checks if it is the last element in the array
             } else if (index == (arr.length - 1)) {
                 //Sets the image source to the path of the set of characters for the end of the line
-                imageArray[index].src = 'Characters/' + endPath + renderConversion[item] + '.svg';
+                //imageArray[index].src = 'Characters/' + endPath + renderConversion[item] + '.svg';
+		    
+				imageArray[index] = loadedImages.end.letters[item];
             } else {
                 //Sets the image source to the normal set of characters
-                imageArray[index].src = 'Characters/' + renderConversion[item] + '.svg';
+                //imageArray[index].src = 'Characters/' + renderConversion[item] + '.svg';
+		
+		    	imageArray[index] = loadedImages.normal.letters[item];
 
                 //Checks if the current character is Yime
                 if (item == 19) {
@@ -264,22 +270,28 @@
                 //Checks if the previous character is a space
                 if (arr[index - 1] == 21) {
                     //Sets the image source to the set of characters that appear at the beginning of a line
-                    imageArray[index].src = 'Characters/' + beginningPath + renderConversion[item] + '.svg';
+                    //imageArray[index].src = 'Characters/' + beginningPath + renderConversion[item] + '.svg';
+					
+					imageArray[index] = loadedImages.beginning.letters[item];
                 //Checks if the next character is a space
                 } else if (arr[index + 1] == 21) {
                     //Sets the image source to the set of characters that appear at the end of a line
-                    imageArray[index].src = 'Characters/' + endPath + renderConversion[item] + '.svg';
+                    //imageArray[index].src = 'Characters/' + endPath + renderConversion[item] + '.svg';
+					
+					imageArray[index] = loadedImages.end.letters[item];
                 }
             }
 
             //Checks if useShortYime is set
             if (useShortYime == 1) {
                 //Set the image source to the short yime path
-                imageArray[index].src = 'Characters/' + yimePath + renderConversion[item] + '.svg';
+                //imageArray[index].src = 'Characters/' + yimePath + renderConversion[item] + '.svg';
+				
+				imageArray[index] = loadedImages.yime.letters[item];
             }
 
             //Sets the function to run when the image loads
-            imageArray[index].onload = function() {
+            //imageArray[index].onload = function() {
                 //Reset both lineAllignment and xOffset
                 lineAllignment = 0;
                 xOffset = 0;
@@ -1828,7 +1840,7 @@
                 if (index < arr.length)
                     //Continue the loop only after the image is fully drawn
                     drawNextLetter(arr[index + 1], index + 1, arr);
-            }
+            //}
         }
 
         //Draws the first letter in the array, beginning the loop
