@@ -62,7 +62,7 @@
         inMemCanvas.width = canvas.width;
         inMemCanvas.height = canvas.height;
         inMemCtx.drawImage(canvas, 0, 0);
-        canvas.height = 1000;
+        canvas.height = height;
         ctx.drawImage(inMemCanvas, 0, 0);
     }
 
@@ -1824,7 +1824,7 @@
             //Add the height of the current letter to the y offset
             yOffset += imgHeight;
 
-            resizeCanvas(window.innerHeight + 100);
+            resizeCanvas(window.innerHeight + yOffset);
 
             //Checks if it is not the last item in the array
             if (index < arr.length - 1)
