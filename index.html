@@ -132,6 +132,47 @@
         punctuationPath + "question",    //24
     ]
 
+	//Define an array to store all the preloaded images
+    var loadedImages = [];
+    
+    loadedImages.normal = []; 
+    loadedImages.beginning = [];
+    loadedImages.end = [];
+    loadedImages.yime = [];
+    
+	loadedImages.normal.letters = [];
+	loadedImages.beginning.letters = [];
+	loadedImages.end.letters = [];
+	loadedImages.yime.letters = [];
+	
+	function preloadImages() {
+		renderConversion.forEach(function(item, index, arr) {
+			loadedImages.normal.letters[index] = new Image();
+			
+			loadedImages.normal.letters[index].src = item;
+			
+			loadedImages.normal.letters[index].onload = function() {
+				
+			}
+			
+			loadedImages.beginning.letters[index] = new Image();
+			
+			loadedImages.beginning.letters[index].src = item;
+			
+			loadedImages.beginning.letters[index].onload = function() {
+				
+			}
+			
+			loadedImages.end.letters[index] = new Image();
+			
+			loadedImages.end.letters[index].src = item;
+			
+			loadedImages.end.letters[index].onload = function() {
+				
+			}
+		}
+	}
+	
     //The setup function, sets up the interface
     function setup() {
         //Render the input box
