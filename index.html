@@ -145,6 +145,7 @@
     loadedImages.end.letters = [];
     loadedImages.yime.letters = [];
 
+    //Preloads all images into their respective arrays in loadedImages
     function preloadImages() {
         renderConversion.forEach(function(item, index, arr) {
             loadedImages.normal.letters[index] = new Image();
@@ -218,9 +219,7 @@
 
             //Checks if it is the first character in the loop
             if (index == 0) {
-                //Sets the source of the image file to the folder that stores the beginning variants of the letters
-                //imageArray[index].src = 'Characters/' + beginningPath + renderConversion[item] + '.svg';
-
+                //Sets the image to the correct one from the preloaded images
                 imageArray[index] = loadedImages.beginning.letters[item];
 
                 //Checks if the current character is Yime
@@ -235,14 +234,10 @@
                 }
                 //Checks if it is the last element in the array
             } else if (index == (arr.length - 1)) {
-                //Sets the image source to the path of the set of characters for the end of the line
-                //imageArray[index].src = 'Characters/' + endPath + renderConversion[item] + '.svg';
-
+                //Sets the image to the correct one from the preloaded images
                 imageArray[index] = loadedImages.end.letters[item];
             } else {
-                //Sets the image source to the normal set of characters
-                //imageArray[index].src = 'Characters/' + renderConversion[item] + '.svg';
-
+                //Sets the image to the correct one from the preloaded images
                 imageArray[index] = loadedImages.normal.letters[item];
 
                 //Checks if the current character is Yime
@@ -258,24 +253,18 @@
 
                 //Checks if the previous character is a space
                 if (arr[index - 1] == 21) {
-                    //Sets the image source to the set of characters that appear at the beginning of a line
-                    //imageArray[index].src = 'Characters/' + beginningPath + renderConversion[item] + '.svg';
-
+                    //Sets the image to the correct one from the preloaded images
                     imageArray[index] = loadedImages.beginning.letters[item];
                     //Checks if the next character is a space
                 } else if (arr[index + 1] == 21) {
-                    //Sets the image source to the set of characters that appear at the end of a line
-                    //imageArray[index].src = 'Characters/' + endPath + renderConversion[item] + '.svg';
-
+                    //Sets the image to the correct one from the preloaded images
                     imageArray[index] = loadedImages.end.letters[item];
                 }
             }
 
             //Checks if useShortYime is set
             if (useShortYime == 1) {
-                //Set the image source to the short yime path
-                //imageArray[index].src = 'Characters/' + yimePath + renderConversion[item] + '.svg';
-
+                //Sets the image to the correct one from the preloaded images
                 imageArray[index] = loadedImages.yime.letters[item];
             }
 
@@ -289,9 +278,6 @@
             //Get the image width and height and store them in variables
             var imgWidth = imageArray[index].width;
             var imgHeight = imageArray[index].height;
-
-            //Debug code
-            //ctx.drawImage(imageArray[index], drawOffset[0], drawOffset[1], imgWidth * size, (imgWidth * size) * imageArray[index].height / imageArray[index].width);
 
             //Case to get the current character and set the line allignment so it is properly on the line
             switch (item) {
