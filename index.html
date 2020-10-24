@@ -132,6 +132,55 @@
         punctuationPath + "question",    //24
     ]
 
+	//Define an array to store all the preloaded images
+    var loadedImages = [];
+    
+    loadedImages.normal = []; 
+    loadedImages.beginning = [];
+    loadedImages.end = [];
+    loadedImages.yime = [];
+    
+	loadedImages.normal.letters = [];
+	loadedImages.beginning.letters = [];
+	loadedImages.end.letters = [];
+	loadedImages.yime.letters = [];
+	
+	function preloadImages() {
+		renderConversion.forEach(function(item, index, arr) {
+			loadedImages.normal.letters[index] = new Image();
+			
+			loadedImages.normal.letters[index].src = 'Characters/' + item + ".svg";
+			
+			loadedImages.normal.letters[index].onload = function() {
+				
+			}
+			
+			loadedImages.beginning.letters[index] = new Image();
+			
+			loadedImages.beginning.letters[index].src = 'Characters/' + beginningPath + item + ".svg";
+			
+			loadedImages.beginning.letters[index].onload = function() {
+				
+			}
+			
+			loadedImages.end.letters[index] = new Image();
+			
+			loadedImages.end.letters[index].src = 'Characters/' + endPath + item + ".svg";
+			
+			loadedImages.end.letters[index].onload = function() {
+				
+			}
+		});
+		
+		loadedImages.yime.letters[19] = new Image();
+		
+		loadedImages.yime.letters[19].src = 'Characters/' + yimePath + "letters/Yime.svg";
+		
+		loadedImages.yime.letters[19].onload = function() {
+			
+		}
+	}
+	
     //The setup function, sets up the interface
     function setup() {
         //Render the input box
@@ -181,7 +230,9 @@
             //Checks if it is the first character in the loop
             if (index == 0) {
                 //Sets the source of the image file to the folder that stores the beginning variants of the letters
-                imageArray[index].src = 'Characters/' + beginningPath + renderConversion[item] + '.svg';
+                //imageArray[index].src = 'Characters/' + beginningPath + renderConversion[item] + '.svg';
+		    
+				imageArray[index] = loadedImages.beginning.letters[item];
 
                 //Checks if the current character is Yime
                 if (item == 19) {
@@ -196,10 +247,14 @@
             //Checks if it is the last element in the array
             } else if (index == (arr.length - 1)) {
                 //Sets the image source to the path of the set of characters for the end of the line
-                imageArray[index].src = 'Characters/' + endPath + renderConversion[item] + '.svg';
+                //imageArray[index].src = 'Characters/' + endPath + renderConversion[item] + '.svg';
+		    
+				imageArray[index] = loadedImages.end.letters[item];
             } else {
                 //Sets the image source to the normal set of characters
-                imageArray[index].src = 'Characters/' + renderConversion[item] + '.svg';
+                //imageArray[index].src = 'Characters/' + renderConversion[item] + '.svg';
+		
+		    	imageArray[index] = loadedImages.normal.letters[item];
 
                 //Checks if the current character is Yime
                 if (item == 19) {
@@ -215,22 +270,28 @@
                 //Checks if the previous character is a space
                 if (arr[index - 1] == 21) {
                     //Sets the image source to the set of characters that appear at the beginning of a line
-                    imageArray[index].src = 'Characters/' + beginningPath + renderConversion[item] + '.svg';
+                    //imageArray[index].src = 'Characters/' + beginningPath + renderConversion[item] + '.svg';
+					
+					imageArray[index] = loadedImages.beginning.letters[item];
                 //Checks if the next character is a space
                 } else if (arr[index + 1] == 21) {
                     //Sets the image source to the set of characters that appear at the end of a line
-                    imageArray[index].src = 'Characters/' + endPath + renderConversion[item] + '.svg';
+                    //imageArray[index].src = 'Characters/' + endPath + renderConversion[item] + '.svg';
+					
+					imageArray[index] = loadedImages.end.letters[item];
                 }
             }
 
             //Checks if useShortYime is set
             if (useShortYime == 1) {
                 //Set the image source to the short yime path
-                imageArray[index].src = 'Characters/' + yimePath + renderConversion[item] + '.svg';
+                //imageArray[index].src = 'Characters/' + yimePath + renderConversion[item] + '.svg';
+				
+				imageArray[index] = loadedImages.yime.letters[item];
             }
 
             //Sets the function to run when the image loads
-            imageArray[index].onload = function() {
+            //imageArray[index].onload = function() {
                 //Reset both lineAllignment and xOffset
                 lineAllignment = 0;
                 xOffset = 0;
@@ -1776,17 +1837,17 @@
                 yOffset += imgHeight;
 
                 //Checks if it is not the last item in the array
-                if (index < arr.length)
+                if (index < arr.length - 1)
                     //Continue the loop only after the image is fully drawn
                     drawNextLetter(arr[index + 1], index + 1, arr);
-            }
+            //}
         }
 
         //Draws the first letter in the array, beginning the loop
         drawNextLetter(textIntArray[0], 0, textIntArray);
     }
 
-    //Parses a string into the array used for drawing
+    //Parses a string into an array used for drawing
     function parseText(text) {
         //Creates a blank array
         var parsedText = [];
@@ -1853,6 +1914,8 @@
         return parsedText;
     }
 
+	preloadImages();
+	
     //Runs the setup function to setup the screen
     setup();
 </script>
