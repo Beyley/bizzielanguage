@@ -151,34 +151,26 @@
 
             loadedImages.normal.letters[index].src = 'Characters/' + item + ".svg";
 
-            loadedImages.normal.letters[index].onload = function() {
-
-            }
+            loadedImages.normal.letters[index].onload = function() {};
 
             loadedImages.beginning.letters[index] = new Image();
 
             loadedImages.beginning.letters[index].src = 'Characters/' + beginningPath + item + ".svg";
 
-            loadedImages.beginning.letters[index].onload = function() {
-
-            }
+            loadedImages.beginning.letters[index].onload = function() {};
 
             loadedImages.end.letters[index] = new Image();
 
             loadedImages.end.letters[index].src = 'Characters/' + endPath + item + ".svg";
 
-            loadedImages.end.letters[index].onload = function() {
-
-            }
+            loadedImages.end.letters[index].onload = function() {};
         });
 
         loadedImages.yime.letters[19] = new Image();
 
         loadedImages.yime.letters[19].src = 'Characters/' + yimePath + "letters/Yime.svg";
 
-        loadedImages.yime.letters[19].onload = function() {
-
-        }
+        loadedImages.yime.letters[19].onload = function() {};
     }
 
     //The setup function, sets up the interface
@@ -1836,9 +1828,8 @@
 
             //Checks if it is not the last item in the array
             if (index < arr.length - 1)
-            //Continue the loop only after the image is fully drawn
+            //Continue the loop only after the image is drawn
                 drawNextLetter(arr[index + 1], index + 1, arr);
-            //}
         }
 
         //Draws the first letter in the array, beginning the loop
