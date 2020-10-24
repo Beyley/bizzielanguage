@@ -157,7 +157,7 @@
 			
 			loadedImages.beginning.letters[index] = new Image();
 			
-			loadedImages.beginning.letters[index].src = item;
+			loadedImages.beginning.letters[index].src = beginningPath + item;
 			
 			loadedImages.beginning.letters[index].onload = function() {
 				
@@ -165,11 +165,19 @@
 			
 			loadedImages.end.letters[index] = new Image();
 			
-			loadedImages.end.letters[index].src = item;
+			loadedImages.end.letters[index].src = endPath + item;
 			
 			loadedImages.end.letters[index].onload = function() {
 				
 			}
+		});
+		
+		loadedImages.end.letters[index] = new Image();
+		
+		loadedImages.end.letters[index].src = yimePath + "letters/Yime.svg";
+		
+		loadedImages.end.letters[index].onload = function() {
+			
 		}
 	}
 	
@@ -1827,7 +1835,7 @@
         drawNextLetter(textIntArray[0], 0, textIntArray);
     }
 
-    //Parses a string into the array used for drawing
+    //Parses a string into an array used for drawing
     function parseText(text) {
         //Creates a blank array
         var parsedText = [];
