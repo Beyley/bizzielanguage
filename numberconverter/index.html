@@ -1,6 +1,2 @@
-<input name="username" onChange="input = parseInt(this.value); console.log(input.toString(5));" type="text"/>
-<script>
-var input = 5;
-
-console.log(input.toString(5));
-</script>
+<input name="username" onChange="var input = parseInt(this.value); document.getElementById('output').innerHTML = input.toString(5);" type="text"/><br>
+<p id="output">Number : NaN</p>
